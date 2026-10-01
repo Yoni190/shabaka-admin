@@ -37,7 +37,7 @@ export default function AdminLoginPage() {
 
     try {
       await login(form);
-      navigate("/");
+      navigate("/admin");
     } catch (error) {
       if (isValidationError(error)) {
         const { errors, message } = error.response.data;
