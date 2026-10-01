@@ -1,11 +1,12 @@
+import type { ReactNode } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import AdminLayout from "./components/layout/AdminLayout";
 import AdminLoginPage from "./pages/Login/AdminLoginPage";
 import DashboardPage from "./pages/Dashboard/DashboardPage";
+import PlaceholderPage from "./pages/PlaceholderPage";
 import { useAdminAuth } from "./hooks/useAdminAuth";
 
-/** Redirects to /login when not authenticated. */
-function RequireAdmin({ children }: { children: React.ReactNode }) {
+function RequireAdmin({ children }: { children: ReactNode }) {
   const { isAuthenticated, isLoading } = useAdminAuth();
 
   if (isLoading) {
@@ -35,10 +36,34 @@ function App() {
           </RequireAdmin>
         }
       >
-        <Route path="/" element={<DashboardPage />} />
+        <Route path="/admin" element={<DashboardPage />} />
+        <Route
+          path="/admin/products"
+          element={<PlaceholderPage title="Products" />}
+        />
+        <Route
+          path="/admin/categories"
+          element={<PlaceholderPage title="Categories" />}
+        />
+        <Route
+          path="/admin/brands"
+          element={<PlaceholderPage title="Brands" />}
+        />
+        <Route
+          path="/admin/orders"
+          element={<PlaceholderPage title="Orders" />}
+        />
+        <Route
+          path="/admin/customers"
+          element={<PlaceholderPage title="Business Customers" />}
+        />
+        <Route
+          path="/admin/settings"
+          element={<PlaceholderPage title="Settings" />}
+        />
       </Route>
 
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/admin" replace />} />
     </Routes>
   );
 }
