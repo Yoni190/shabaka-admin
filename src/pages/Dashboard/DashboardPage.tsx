@@ -4,7 +4,7 @@ export default function DashboardPage() {
   const { user } = useAdminAuth();
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div className="mx-auto w-full max-w-7xl px-6 py-8 lg:px-8 lg:py-10">
       <p className="text-xs font-semibold uppercase tracking-wider text-blue-600">
         Dashboard
       </p>
