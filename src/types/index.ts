@@ -52,3 +52,47 @@ export interface DashboardData {
 export interface DashboardResponse {
   data: DashboardData;
 }
+
+export interface Category {
+  id: number;
+  name: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CategoryDetails extends Category {
+  products_count: number;
+}
+
+export interface CategoryPaginationMeta {
+  current_page: number;
+  from: number | null;
+  last_page: number;
+  per_page: number;
+  to: number | null;
+  total: number;
+}
+
+export interface CategoryListResponse {
+  data: Category[];
+  links: {
+    first: string | null;
+    last: string | null;
+    prev: string | null;
+    next: string | null;
+  };
+  meta: CategoryPaginationMeta;
+}
+
+export interface CategoryDetailsResponse {
+  data: CategoryDetails;
+}
+
+export interface CreateCategoryPayload {
+  name: string;
+}
+
+export type UpdateCategoryPayload = CreateCategoryPayload;
+
+export type CategorySortField = "name" | "created_at";
+export type SortDirection = "asc" | "desc";
