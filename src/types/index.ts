@@ -96,3 +96,46 @@ export type UpdateCategoryPayload = CreateCategoryPayload;
 
 export type CategorySortField = "name" | "created_at";
 export type SortDirection = "asc" | "desc";
+
+export interface Brand {
+  id: number;
+  name: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BrandDetails extends Brand {
+  products_count: number;
+}
+
+export interface BrandPaginationMeta {
+  current_page: number;
+  from: number | null;
+  last_page: number;
+  per_page: number;
+  to: number | null;
+  total: number;
+}
+
+export interface BrandListResponse {
+  data: Brand[];
+  links: {
+    first: string | null;
+    last: string | null;
+    prev: string | null;
+    next: string | null;
+  };
+  meta: BrandPaginationMeta;
+}
+
+export interface BrandDetailsResponse {
+  data: BrandDetails;
+}
+
+export interface CreateBrandPayload {
+  name: string;
+}
+
+export type UpdateBrandPayload = CreateBrandPayload;
+
+export type BrandSortField = "name" | "created_at";
