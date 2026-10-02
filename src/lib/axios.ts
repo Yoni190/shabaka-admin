@@ -42,6 +42,20 @@ export function isValidationError(
   );
 }
 
+/** Extract a user-safe message from any error. */
+export function getErrorMessage(
+  error: unknown,
+  fallback = "Something went wrong. Please try again.",
+): string {
+  if (axios.isAxiosError(error)) {
+    const message = error.response?.data?.message;
+    if (typeof message === "string" && message.length > 0) {
+      return message;
+    }
+  }
+  return fallback;
+}
+
 /** Type guard for a 401 response carrying an optional `message`. */
 export function isUnauthorized(
   error: unknown,
