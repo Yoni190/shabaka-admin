@@ -139,3 +139,76 @@ export interface CreateBrandPayload {
 export type UpdateBrandPayload = CreateBrandPayload;
 
 export type BrandSortField = "name" | "created_at";
+
+export interface ProductImage {
+  id: number;
+  url: string;
+  is_primary: boolean;
+  sort_order: number;
+}
+
+export interface ProductCategoryRef {
+  id: number;
+  name: string;
+}
+
+export interface ProductBrandRef {
+  id: number;
+  name: string;
+}
+
+export interface Product {
+  id: number;
+  name: string;
+  sku: string;
+  description: string | null;
+  price: string;
+  stock_quantity: number;
+  is_active: boolean;
+  category: ProductCategoryRef;
+  brand: ProductBrandRef;
+  images: ProductImage[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProductPaginationMeta {
+  current_page: number;
+  from: number | null;
+  last_page: number;
+  per_page: number;
+  to: number | null;
+  total: number;
+}
+
+export interface ProductListResponse {
+  data: Product[];
+  links: {
+    first: string | null;
+    last: string | null;
+    prev: string | null;
+    next: string | null;
+  };
+  meta: ProductPaginationMeta;
+}
+
+export interface ProductDetailsResponse {
+  data: Product;
+}
+
+export type ProductSortField = "name" | "price" | "stock_quantity" | "created_at";
+
+/** Fields captured in the product form. All strings — the API expects string input. */
+export interface ProductFormValues {
+  name: string;
+  sku: string;
+  description: string;
+  category_id: string;
+  brand_id: string;
+  price: string;
+  stock_quantity: string;
+  is_active: "1" | "0";
+}
+
+/** Field-keyed errors from a 422 response. */
+export type ProductFieldErrors = Partial<Record<keyof ProductFormValues, string>>;
