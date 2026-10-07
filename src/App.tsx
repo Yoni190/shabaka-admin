@@ -6,6 +6,9 @@ import DashboardPage from "./pages/Dashboard/DashboardPage";
 import PlaceholderPage from "./pages/PlaceholderPage";
 import CategoriesPage from "./pages/Categories/CategoriesPage";
 import BrandsPage from "./pages/Brands/BrandsPage";
+import ProductsPage from "./pages/Products/ProductsPage";
+import CreateProductPage from "./pages/Products/CreateProductPage";
+import EditProductPage from "./pages/Products/EditProductPage";
 import { useAdminAuth } from "./hooks/useAdminAuth";
 
 function RequireAdmin({ children }: { children: ReactNode }) {
@@ -39,10 +42,9 @@ function App() {
         }
       >
         <Route path="/admin" element={<DashboardPage />} />
-        <Route
-          path="/admin/products"
-          element={<PlaceholderPage title="Products" />}
-        />
+        <Route path="/admin/products" element={<ProductsPage />} />
+        <Route path="/admin/products/create" element={<CreateProductPage />} />
+        <Route path="/admin/products/:id/edit" element={<EditProductPage />} />
         <Route path="/admin/categories" element={<CategoriesPage />} />
         <Route path="/admin/brands" element={<BrandsPage />} />
         <Route
