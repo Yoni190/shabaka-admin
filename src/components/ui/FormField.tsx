@@ -5,7 +5,9 @@ interface FormFieldProps {
   label: string;
   value: string;
   onChange: (value: string) => void;
-  type?: "text" | "email" | "password" | "tel";
+  type?: "text" | "email" | "password" | "tel" | "number";
+  step?: string;
+  min?: string;
   error?: string;
   required?: boolean;
   placeholder?: string;
@@ -19,6 +21,8 @@ export default function FormField({
   value,
   onChange,
   type = "text",
+  step,
+  min,
   error,
   required,
   placeholder,
@@ -40,6 +44,8 @@ export default function FormField({
         id={id}
         name={id}
         type={type}
+        step={step}
+        min={min}
         value={value}
         required={required}
         placeholder={placeholder}
