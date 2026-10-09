@@ -20,6 +20,7 @@ const initialValues: ProductFormValues = {
   price: "",
   stock_quantity: "",
   is_active: "1",
+  is_featured: "0"
 };
 
 export default function CreateProductPage() {
@@ -48,6 +49,7 @@ export default function CreateProductPage() {
     formData.append("price", values.price);
     formData.append("stock_quantity", values.stock_quantity);
     formData.append("is_active", values.is_active);
+    formData.append("is_featured", values.is_featured);
     newFiles.forEach((file) => formData.append("images[]", file));
 
     try {

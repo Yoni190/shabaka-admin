@@ -190,6 +190,19 @@ export default function ProductForm({
           error={fieldErrors.is_active}
           required
         />
+
+        <SelectField
+          id="is_featured"
+          label="Featured Status"
+          value={values.is_featured}
+          onChange={(value) => update("is_featured", value as "1" | "0")}
+          options={[
+            { value: "1", label: "Active" },
+            { value: "0", label: "Inactive" },
+          ]}
+          error={fieldErrors.is_featured}
+          required
+        />
       </Section>
 
       <Section title="Images">

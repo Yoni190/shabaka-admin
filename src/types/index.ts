@@ -165,6 +165,7 @@ export interface Product {
   price: string;
   stock_quantity: number;
   is_active: boolean;
+  is_featured: boolean;
   category: ProductCategoryRef;
   brand: ProductBrandRef;
   images: ProductImage[];
@@ -208,6 +209,7 @@ export interface ProductFormValues {
   price: string;
   stock_quantity: string;
   is_active: "1" | "0";
+  is_featured: "1" | "0";
 }
 
 /** Field-keyed errors from a 422 response. */
