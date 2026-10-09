@@ -22,6 +22,7 @@ function toFormValues(product: Product): ProductFormValues {
     price: product.price,
     stock_quantity: String(product.stock_quantity),
     is_active: product.is_active ? "1" : "0",
+    is_featured: product.is_featured ? "1": "0",
   };
 }
 
@@ -94,6 +95,7 @@ export default function EditProductPage() {
     formData.append("price", values.price);
     formData.append("stock_quantity", values.stock_quantity);
     formData.append("is_active", values.is_active);
+    formData.append("is_featured", values.is_featured);
 
     // Only include new files — the backend never re-uploads existing ones.
     newFiles.forEach((file) => formData.append("images[]", file));
