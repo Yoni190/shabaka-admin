@@ -90,6 +90,10 @@ export default function ProductViewDialog({
               label="Status"
               value={product.is_active ? "Active" : "Inactive"}
             />
+            <Field
+              label="Featured Status"
+              value={product.is_featured ? "Active" : "Inactive"}
+            />
             <Field label="Created" value={formatDate(product.created_at)} />
             <Field
               label="Last updated"
