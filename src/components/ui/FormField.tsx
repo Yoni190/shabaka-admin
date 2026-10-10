@@ -8,6 +8,7 @@ interface FormFieldProps {
   type?: "text" | "email" | "password" | "tel" | "number";
   step?: string;
   min?: string;
+  maxLength?: number;
   error?: string;
   required?: boolean;
   placeholder?: string;
@@ -23,6 +24,7 @@ export default function FormField({
   type = "text",
   step,
   min,
+  maxLength,
   error,
   required,
   placeholder,
@@ -46,6 +48,7 @@ export default function FormField({
         type={type}
         step={step}
         min={min}
+        maxLength={maxLength}
         value={value}
         required={required}
         placeholder={placeholder}

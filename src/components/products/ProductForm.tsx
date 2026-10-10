@@ -102,6 +102,7 @@ export default function ProductForm({
           onChange={(value) => update("name", value)}
           error={fieldErrors.name}
           required
+          maxLength={100}
           placeholder="e.g. Cisco Catalyst 9200"
         />
         <FormField
