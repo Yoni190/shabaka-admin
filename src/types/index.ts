@@ -100,6 +100,8 @@ export type SortDirection = "asc" | "desc";
 export interface Brand {
   id: number;
   name: string;
+  brand_image: string | null;
+  brand_image_url: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -132,11 +134,13 @@ export interface BrandDetailsResponse {
   data: BrandDetails;
 }
 
-export interface CreateBrandPayload {
+export interface BrandFormPayload {
   name: string;
+  brand_image?: File | null;
 }
 
-export type UpdateBrandPayload = CreateBrandPayload;
+export type CreateBrandPayload = BrandFormPayload;
+export type UpdateBrandPayload = BrandFormPayload;
 
 export type BrandSortField = "name" | "created_at";
 
