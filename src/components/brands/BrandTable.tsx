@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Brand, BrandSortField, SortDirection } from "../../types";
 
 interface BrandTableProps {
@@ -33,9 +34,12 @@ export default function BrandTable({
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[720px] border-collapse text-sm">
+        <table className="w-full min-w-[820px] border-collapse text-sm">
           <thead>
             <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <th scope="col" className="w-16 px-5 py-3">
+                Image
+              </th>
               <SortHeader
                 label="Name"
                 field="name"
@@ -61,6 +65,12 @@ export default function BrandTable({
           <tbody className="divide-y divide-slate-100">
             {brands.map((brand) => (
               <tr key={brand.id} className="hover:bg-slate-50/60">
+                <td className="px-5 py-3">
+                  <BrandThumbnail
+                    url={brand.brand_image_url}
+                    alt={`${brand.name} logo`}
+                  />
+                </td>
                 <td className="px-5 py-3.5 font-medium text-slate-900">
                   {brand.name}
                 </td>
@@ -100,6 +110,48 @@ export default function BrandTable({
           </tbody>
         </table>
       </div>
+    </div>
+  );
+}
+
+/* ---------- Thumbnail with fallback ---------- */
+
+function BrandThumbnail({ url, alt }: { url: string | null; alt: string }) {
+  const [errored, setErrored] = useState(false);
+
+  if (!url || errored) {
+    return (
+      <div
+        className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-slate-50"
+        aria-label={`${alt} — no image`}
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.6}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="h-4 w-4 text-slate-400"
+          aria-hidden="true"
+        >
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <circle cx="9" cy="9" r="2" />
+          <path d="m21 15-3.5-3.5a2 2 0 0 0-2.83 0L6 20" />
+        </svg>
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-10 w-10 overflow-hidden rounded-lg border border-slate-200 bg-white">
+      <img
+        src={url}
+        alt={alt}
+        onError={() => setErrored(true)}
+        className="h-full w-full object-contain"
+        loading="lazy"
+      />
     </div>
   );
 }

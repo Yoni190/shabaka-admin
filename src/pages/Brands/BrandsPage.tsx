@@ -20,6 +20,11 @@ import type {
   SortDirection,
 } from "../../types";
 
+interface BrandFieldErrors {
+  name?: string;
+  brand_image?: string;
+}
+
 export default function BrandsPage() {
   // List state
   const [brands, setBrands] = useState<Brand[]>([]);
@@ -45,7 +50,7 @@ export default function BrandsPage() {
 
   // Dialog submit state
   const [isSaving, setIsSaving] = useState(false);
-  const [formFieldError, setFormFieldError] = useState<string | undefined>();
+  const [formFieldErrors, setFormFieldErrors] = useState<BrandFieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -66,7 +71,6 @@ export default function BrandsPage() {
         direction: sortDirection,
       });
 
-      // Step back if we land on an empty page after deleting the last item.
       if (response.data.length === 0 && response.meta.current_page > 1) {
         setPage(response.meta.current_page - 1);
         return;
@@ -85,12 +89,10 @@ export default function BrandsPage() {
     void fetchList();
   }, [fetchList]);
 
-  // Reset to page 1 when the search term changes.
   useEffect(() => {
     setPage(1);
   }, [debouncedSearch]);
 
-  // Auto-dismiss success banner.
   useEffect(() => {
     if (!successMessage) return;
     const timer = window.setTimeout(() => setSuccessMessage(null), 4000);
@@ -111,28 +113,44 @@ export default function BrandsPage() {
     setPage(1);
   };
 
+  /* ---------- Field error helpers ---------- */
+
+  const resetFormErrors = () => {
+    setFormError(null);
+    setFormFieldErrors({});
+  };
+
+  const applyValidationErrors = (error: unknown): boolean => {
+    if (!isValidationError(error)) return false;
+    const errors = error.response.data.errors;
+    setFormFieldErrors({
+      name: errors.name?.[0],
+      brand_image: errors.brand_image?.[0],
+    });
+    setFormError(error.response.data.message ?? null);
+    return true;
+  };
+
   /* ---------- Create ---------- */
 
   const openCreate = () => {
-    setFormError(null);
-    setFormFieldError(undefined);
+    resetFormErrors();
     setCreateOpen(true);
   };
 
-  const handleCreateSubmit = async (name: string) => {
+  const handleCreateSubmit = async (
+    name: string,
+    brandImage: File | null,
+  ) => {
     setIsSaving(true);
-    setFormError(null);
-    setFormFieldError(undefined);
+    resetFormErrors();
     try {
-      await createBrand({ name });
+      await createBrand({ name, brand_image: brandImage });
       setCreateOpen(false);
       setSuccessMessage("Brand created successfully.");
       await fetchList();
     } catch (error) {
-      if (isValidationError(error)) {
-        setFormFieldError(error.response.data.errors.name?.[0]);
-        setFormError(error.response.data.message ?? null);
-      } else {
+      if (!applyValidationErrors(error)) {
         setFormError(getErrorMessage(error, "Failed to create brand."));
       }
     } finally {
@@ -143,26 +161,24 @@ export default function BrandsPage() {
   /* ---------- Edit ---------- */
 
   const openEdit = (brand: Brand) => {
-    setFormError(null);
-    setFormFieldError(undefined);
+    resetFormErrors();
     setEditTarget(brand);
   };
 
-  const handleEditSubmit = async (name: string) => {
+  const handleEditSubmit = async (
+    name: string,
+    brandImage: File | null,
+  ) => {
     if (!editTarget) return;
     setIsSaving(true);
-    setFormError(null);
-    setFormFieldError(undefined);
+    resetFormErrors();
     try {
-      await updateBrand(editTarget.id, { name });
+      await updateBrand(editTarget.id, { name, brand_image: brandImage });
       setEditTarget(null);
       setSuccessMessage("Brand updated successfully.");
       await fetchList();
     } catch (error) {
-      if (isValidationError(error)) {
-        setFormFieldError(error.response.data.errors.name?.[0]);
-        setFormError(error.response.data.message ?? null);
-      } else {
+      if (!applyValidationErrors(error)) {
         setFormError(getErrorMessage(error, "Failed to update brand."));
       }
     } finally {
@@ -210,8 +226,6 @@ export default function BrandsPage() {
       setSuccessMessage("Brand deleted successfully.");
       await fetchList();
     } catch (error) {
-      // Handles 409 (products assigned) with backend message,
-      // and any other failure with a friendly fallback.
       setDeleteError(
         getErrorMessage(error, "Failed to delete brand. Please try again."),
       );
@@ -329,7 +343,8 @@ export default function BrandsPage() {
         isOpen={createOpen}
         mode="create"
         isSubmitting={isSaving}
-        fieldError={formFieldError}
+        fieldError={formFieldErrors.name}
+        imageError={formFieldErrors.brand_image}
         formError={formError}
         onClose={() => setCreateOpen(false)}
         onSubmit={handleCreateSubmit}
@@ -339,8 +354,10 @@ export default function BrandsPage() {
         isOpen={editTarget !== null}
         mode="edit"
         initialName={editTarget?.name ?? ""}
+        initialImageUrl={editTarget?.brand_image_url ?? null}
         isSubmitting={isSaving}
-        fieldError={formFieldError}
+        fieldError={formFieldErrors.name}
+        imageError={formFieldErrors.brand_image}
         formError={formError}
         onClose={() => setEditTarget(null)}
         onSubmit={handleEditSubmit}
@@ -366,7 +383,7 @@ export default function BrandsPage() {
   );
 }
 
-/* ---------- Inline sub-components ---------- */
+/* ---------- Inline sub-components (unchanged from before, plus image column) ---------- */
 
 function TableSkeleton() {
   return (
@@ -380,8 +397,8 @@ function TableSkeleton() {
             key={index}
             className="flex animate-pulse items-center gap-4 px-5 py-4"
           >
+            <div className="h-10 w-10 rounded-lg bg-slate-100" />
             <div className="h-4 w-40 rounded bg-slate-100" />
-            <div className="h-4 w-24 rounded bg-slate-100" />
             <div className="h-4 w-24 rounded bg-slate-100" />
             <div className="ml-auto h-4 w-24 rounded bg-slate-100" />
           </div>
