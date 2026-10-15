@@ -9,6 +9,8 @@ import BrandsPage from "./pages/Brands/BrandsPage";
 import ProductsPage from "./pages/Products/ProductsPage";
 import CreateProductPage from "./pages/Products/CreateProductPage";
 import EditProductPage from "./pages/Products/EditProductPage";
+import OrdersPage from "./pages/Orders/OrdersPage";
+import OrderDetailsPage from "./pages/Orders/OrderDetailsPage";
 import { useAdminAuth } from "./hooks/useAdminAuth";
 
 function RequireAdmin({ children }: { children: ReactNode }) {
@@ -47,10 +49,8 @@ function App() {
         <Route path="/admin/products/:id/edit" element={<EditProductPage />} />
         <Route path="/admin/categories" element={<CategoriesPage />} />
         <Route path="/admin/brands" element={<BrandsPage />} />
-        <Route
-          path="/admin/orders"
-          element={<PlaceholderPage title="Orders" />}
-        />
+        <Route path="/admin/orders" element={<OrdersPage />} />
+        <Route path="/admin/orders/:id" element={<OrderDetailsPage />} />
         <Route
           path="/admin/customers"
           element={<PlaceholderPage title="Business Customers" />}
