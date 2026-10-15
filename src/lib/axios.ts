@@ -73,3 +73,9 @@ export function isForbidden(
 ): error is { response: { status: 403; data: { message?: string } } } {
   return axios.isAxiosError(error) && error.response?.status === 403;
 }
+
+export function isNotFound(
+  error: unknown,
+): error is { response: { status: 404; data: { message?: string } } } {
+  return axios.isAxiosError(error) && error.response?.status === 404;
+}
