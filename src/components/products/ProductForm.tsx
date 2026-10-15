@@ -31,8 +31,6 @@ interface ProductFormProps {
   onCancel: () => void;
 }
 
-const emptyImageError = "Please check the selected images.";
-
 export default function ProductForm({
   mode,
   initialValues,

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Modal from "../ui/Modal";
-import { getErrorMessage } from "../../lib/axios";
 import type { OrderStatus } from "../../types/order";
 
 interface OrderStatusUpdaterProps {
