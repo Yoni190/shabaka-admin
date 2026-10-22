@@ -10,6 +10,11 @@ const emptyForm: AdminLoginPayload = {
   password: "",
 };
 
+const DEMO_CREDENTIALS: AdminLoginPayload = {
+  email: "admin@shabaka.com",
+  password: "Aa123456",
+};
+
 export default function AdminLoginPage() {
   const [form, setForm] = useState<AdminLoginPayload>(emptyForm);
   const [fieldErrors, setFieldErrors] = useState<AdminLoginFieldErrors>({});
@@ -27,6 +32,41 @@ export default function AdminLoginPage() {
       delete next[field];
       return next;
     });
+  };
+
+  const handleDemoLogin = async () => {
+    setForm(DEMO_CREDENTIALS);
+    setFormError(null);
+    setFieldErrors({});
+    setIsSubmitting(true);
+
+    try {
+      await login(DEMO_CREDENTIALS);
+      navigate("/admin");
+    } catch (error) {
+      if (isValidationError(error)) {
+        const { errors, message } = error.response.data;
+        const flattened: AdminLoginFieldErrors = {};
+        for (const [field, messages] of Object.entries(errors)) {
+          flattened[field as keyof AdminLoginPayload] = messages[0];
+        }
+        setFieldErrors(flattened);
+        setFormError(message ?? "Please correct the highlighted fields.");
+      } else if (isUnauthorized(error)) {
+        setFormError(
+          error.response.data.message ?? "Invalid email or password.",
+        );
+      } else if (isForbidden(error)) {
+        setFormError(
+          error.response.data.message ??
+            "This account does not have admin access.",
+        );
+      } else {
+        setFormError("We couldn't sign you in right now. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -222,6 +262,15 @@ export default function AdminLoginPage() {
               className="inline-flex w-full items-center justify-center rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
             >
               {isSubmitting ? "Signing in…" : "Sign in"}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              disabled={isSubmitting}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-slate-50 px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <span>Use Demo Account</span>
             </button>
           </form>
 
